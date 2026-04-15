@@ -49,17 +49,17 @@ class CheckoutService:
         self.payment_service = payment_service
 
     def process_order(self, order: Order, coupon: Coupon, coupon_code: str):
-        # 1. Aplicar cupom
+        
         order.apply_coupon(coupon, coupon_code)
 
-        # 2. Validar pagamento ANTES de confirmar
+        
         if not self.payment_service.has_sufficient_balance(order.final_amount):
             raise InsufficientFundsException("Pagamento não autorizado")
 
-        # 3. Debitar saldo
+        
         self.payment_service.debit(order.final_amount)
 
-        # 4. Confirmar pedido
+        
         return {
             "status": "APPROVED",
             "amount_charged": order.final_amount
